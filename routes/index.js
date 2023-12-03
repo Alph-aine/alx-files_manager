@@ -26,6 +26,10 @@ function appRoutes(app) {
     UsersController.postNew(req, res);
   });
 
+  router.get('/users/me', (req, res) => {
+    UsersController.getMe(req, res);
+  });
+
   // AuthController
 
   // signs in user
