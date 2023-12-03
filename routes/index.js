@@ -1,6 +1,7 @@
 import express from 'express';
 import AppController from '../controllers/AppController';
 import UsersController from '../controllers/UsersController';
+import AuthController from '../controllers/AuthController';
 
 function appRoutes(app) {
   const router = express.Router();
@@ -23,6 +24,18 @@ function appRoutes(app) {
   // creates a new user in the db
   router.post('/users', (req, res) => {
     UsersController.postNew(req, res);
+  });
+
+  // AuthController
+
+  // signs in user
+  router.get('/connect', (req, res) => {
+    AuthController.getConnect(req, res);
+  });
+
+  // logs out user
+  router.get('/disconnect', (req, res) => {
+    AuthController.getDisconnect(req, res);
   });
 }
 
