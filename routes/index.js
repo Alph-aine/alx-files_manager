@@ -19,6 +19,8 @@ function appRoutes(app) {
   });
 
   // Users Controller
+
+  // creates a new user in the db
   router.post('/users', (req, res) => {
     UsersController.postNew(req, res);
   });
