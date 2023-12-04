@@ -96,7 +96,7 @@ class FilesController {
         _id: parentId,
       });
 
-      if (!folder || !folder.type === 'folder') return response.status(404).send([]);
+      if (!folder || !folder.type === 'folder') return response.status(200).send([]);
     }
     const query = [
       { $match: { parentId } },
