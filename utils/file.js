@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb';
 import { v4 as uuidv4 } from 'uuid';
 import dbClient from './db';
 import basicUtils from './basic';
+import userUtils from './user';
 
 /**
  * File utilities
@@ -121,6 +122,7 @@ const fileUtils = {
     return fileList;
   },
 
+  // updates a file in the database
   async updateFile(query, set) {
     const fileList = await dbClient.filesCollection.findOneAndUpdate(
       query,
@@ -128,6 +130,52 @@ const fileUtils = {
       { returnOriginal: false },
     );
     return fileList;
+  },
+
+  async isPublish(request, setPublish) {
+    const { id: fileId } = request.params;
+    if (!basicUtils.isValid(fileId)) return { error: 'Unauthorized', code: 401 };
+
+    const { userId } = await userUtils.getUserIdAndKey(request);
+    if (!basicUtils.isValid(userId)) return { error: 'Unauthorized', code: 401 };
+
+    const user = await userUtils.getUser({
+      _id: ObjectId(userId),
+    });
+    if (!user) return { error: 'Unauthorized', code: 401 };
+
+    const file = await fileUtils.getFile({
+      _id: ObjectId(fileId),
+      userId: ObjectId(userId),
+    });
+    if (!file) return { error: 'Not found', code: 404 };
+
+    const result = await this.updateFile(
+      {
+        _id: ObjectId(fileId),
+        userId: ObjectId(userId),
+      },
+      { $set: { isPublish: setPublish } },
+    );
+    const {
+      _id: id,
+      userId: resultUserId,
+      name,
+      type,
+      isPublic,
+      parentId,
+    } = result.value;
+
+    const updatedFile = {
+      id,
+      userId: resultUserId,
+      name,
+      type,
+      isPublic,
+      parentId,
+    };
+
+    return { error: null, code: 200, updatedFile };
   },
 };
 
