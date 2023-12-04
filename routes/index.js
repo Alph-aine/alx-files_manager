@@ -56,7 +56,7 @@ function appRoutes(app) {
   });
 
   // gets all user files for a specific parentId
-  router.get('files', (req, res) => {
+  router.get('/files', (req, res) => {
     FilesController.getIndex(req, res);
   });
 }

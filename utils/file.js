@@ -120,6 +120,15 @@ const fileUtils = {
     const fileList = await dbClient.filesCollection.aggregate(query);
     return fileList;
   },
+
+  async updateFile(query, set) {
+    const fileList = await dbClient.filesCollection.findOneAndUpdate(
+      query,
+      set,
+      { returnOriginal: false },
+    );
+    return fileList;
+  },
 };
 
 export default fileUtils;
