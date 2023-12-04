@@ -104,7 +104,7 @@ class FilesController {
       { $limit: 20 },
     ];
 
-    const fileCursor = await fileUtils.getFIlesOfParentId(query);
+    const fileCursor = await fileUtils.getFIlessOfParentId(query);
     const fileList = [];
     await fileCursor.forEach((doc) => {
       const document = fileUtils.processFile(doc);
