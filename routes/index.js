@@ -49,6 +49,16 @@ function appRoutes(app) {
   router.post('/files', (req, res) => {
     FilesController.postUpload(req, res);
   });
+
+  // retrieve file document based on fileId and userId
+  router.get('/files/:id', (req, res) => {
+    FilesController.getShow(req, res);
+  });
+
+  // gets all user files for a specific parentId
+  router.get('files', (req, res) => {
+    FilesController.getIndex(req, res);
+  });
 }
 
 export default appRoutes;

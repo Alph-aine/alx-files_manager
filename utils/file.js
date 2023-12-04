@@ -114,6 +114,12 @@ const fileUtils = {
     const newFile = { id: result.insertId, ...file };
     return { error: null, newFile };
   },
+
+  // gets list of files belonging to a parentId from the db
+  async getFIlesOfParentId(query) {
+    const fileList = await dbClient.filesCollection.aggregate(query);
+    return fileList;
+  },
 };
 
 export default fileUtils;
