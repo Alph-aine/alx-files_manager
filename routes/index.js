@@ -59,6 +59,16 @@ function appRoutes(app) {
   router.get('/files', (req, res) => {
     FilesController.getIndex(req, res);
   });
+
+  // sets isPublish value to true
+  router.put('/files/:id/publish', (req, res) => {
+    FilesController.putPublish(req, res);
+  });
+
+  // sets isPublish value to false
+  router.put('/files/:id/unpublish', (req, res) => {
+    FilesController.putUnPublish(req, res);
+  });
 }
 
 export default appRoutes;

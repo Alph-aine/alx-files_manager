@@ -112,6 +112,28 @@ class FilesController {
     });
     return response.status(200).send(fileList);
   }
+
+  // sets isPublish to true on file documents based on id
+  static async putPublish(request, response) {
+    const { error, code, updatedFile } = await fileUtils.isPublish(
+      request,
+      true,
+    );
+
+    if (error) return response.status(code).send(error);
+
+    return response.status(code).send(updatedFile);
+  }
+
+  // sets isPublish to false on files based on id
+  static async putUnPublish(request, response) {
+    const { error, code, updatedFile } = await fileUtils.isPublish(
+      request,
+      false,
+    );
+    if (error) return response.status(code).send(error);
+    return response.status(code).send(updatedFile);
+  }
 }
 
 export default FilesController;

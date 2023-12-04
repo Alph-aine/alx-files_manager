@@ -132,6 +132,7 @@ const fileUtils = {
     return fileList;
   },
 
+  // helper method to set isPublish value to true or false based on the need
   async isPublish(request, setPublish) {
     const { id: fileId } = request.params;
     if (!basicUtils.isValid(fileId)) return { error: 'Unauthorized', code: 401 };
