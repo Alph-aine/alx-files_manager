@@ -77,7 +77,7 @@ const fileUtils = {
     return file;
   },
 
-  // saves file to db
+  // saves file to db and disk
   async saveFile(userId, fileParams, FOLDER_PATH) {
     const {
       name, type, isPublic, data,

@@ -8,6 +8,7 @@ const FOLDER_PATH = process.env.FOLDER_PATH || '/tmp/files_manager';
 const fileQueue = new Queue('fileQueue');
 
 class FilesController {
+  // creates a file in db and disk
   static async postUpload(request, response) {
     const { userId } = await userUtils.getUserIdAndKey(request);
 
