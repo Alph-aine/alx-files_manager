@@ -1,74 +1,44 @@
-import express from 'express';
+import { Router } from 'express';
+
 import AppController from '../controllers/AppController';
 import UsersController from '../controllers/UsersController';
 import AuthController from '../controllers/AuthController';
 import FilesController from '../controllers/FilesController';
+import UtilController from '../controllers/UtilController';
 
-function appRoutes(app) {
-  const router = express.Router();
-  app.use('/', router);
+const router = Router();
 
-  // App Controller
+router.use((request, response, next) => {
+  const paths = ['/connect'];
+  if (!paths.includes(request.path)) {
+    next();
+  } else if (!request.headers.authorization) {
+    response.status(401).json({ error: 'Unauthorized' }).end();
+  } else {
+    next();
+  }
+});
 
-  // returns db and redis status
-  router.get('/status', (req, res) => {
-    AppController.getStatus(req, res);
-  });
+router.use((request, response, next) => {
+  const paths = ['/disconnect', '/users/me', '/files'];
+  if (!paths.includes(request.path)) {
+    next();
+  } else if (!request.headers['x-token']) {
+    response.status(401).json({ error: 'Unauthorized' }).end();
+  } else {
+    next();
+  }
+});
 
-  // returns number of users and files in db
-  router.get('/stats', (req, res) => {
-    AppController.getStats(req, res);
-  });
+router.get('/status', AppController.getStatus);
+router.get('/stats', AppController.getStats);
+router.post('/users', UsersController.postNew);
+router.get('/connect', AuthController.getConnect);
+router.get('/disconnect', AuthController.getDisconnect);
+router.post('/files', FilesController.postUpload);
+router.get('/files/:id', FilesController.getShow);
+router.get('/files', FilesController.getIndex);
 
-  // Users Controller
-
-  // creates a new user in the db
-  router.post('/users', (req, res) => {
-    UsersController.postNew(req, res);
-  });
-
-  router.get('/users/me', (req, res) => {
-    UsersController.getMe(req, res);
-  });
-
-  // AuthController
-
-  // signs in user
-  router.get('/connect', (req, res) => {
-    AuthController.getConnect(req, res);
-  });
-
-  // logs out user
-  router.get('/disconnect', (req, res) => {
-    AuthController.getDisconnect(req, res);
-  });
-
-  // FileController
-
-  // writes a file to disk and db
-  router.post('/files', (req, res) => {
-    FilesController.postUpload(req, res);
-  });
-
-  // retrieve file document based on fileId and userId
-  router.get('/files/:id', (req, res) => {
-    FilesController.getShow(req, res);
-  });
-
-  // gets all user files for a specific parentId
-  router.get('/files', (req, res) => {
-    FilesController.getIndex(req, res);
-  });
-
-  // sets isPublish value to true
-  router.put('/files/:id/publish', (req, res) => {
-    FilesController.putPublish(req, res);
-  });
-
-  // sets isPublish value to false
-  router.put('/files/:id/unpublish', (req, res) => {
-    FilesController.putUnPublish(req, res);
-  });
-}
-
-export default appRoutes;
+router.put('/files/:id/publish', UtilController.token, FilesController.putPublish);
+router.put('/files/:id/unpublish', UtilController.token, FilesController.putUnpublish);
+module.exports = router;
