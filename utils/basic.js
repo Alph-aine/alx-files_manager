@@ -1,10 +1,15 @@
 import { ObjectId } from 'mongodb';
 
-// basic/general utils
-
+/**
+ * Module with basic utilities
+ */
 const basicUtils = {
-  // checks if Id is valid for mongodb
-  isValid(id) {
+  /**
+   * Checks if Id is Valid for Mongo
+   * @id {string|number} id to be evaluated
+   * @return {boolean} true if valid, false if not
+   */
+  isValidId(id) {
     try {
       ObjectId(id);
     } catch (err) {
